@@ -6,30 +6,29 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-# Pick up key from environment without passing an empty string
 api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
 
-# Fast model: Gemini 1.5 Flash
+# Fast model: Gemini 2.0 Flash
 fast_llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.0-flash",
     api_key=api_key,
     temperature=0.5,
     timeout=60,
     max_retries=2,
 )
 
-# Writer model: Gemini 1.5 Flash (reliable and avoids free-tier rate limits)
+# Writer model: Gemini 2.0 Flash
 writer_llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.0-flash",
     api_key=api_key,
     temperature=0.4,
     timeout=90,
     max_retries=2,
 )
 
-# Critic model: Gemini 1.5 Flash
+# Critic model: Gemini 2.0 Flash
 critic_llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.0-flash",
     api_key=api_key,
     temperature=0.2,
     timeout=60,
