@@ -281,7 +281,7 @@ with st.sidebar:
 st.markdown(
     f'<div class="logo-row">{AI_LOGO}'
     f'<div><h1>Multi AI Agent System</h1>'
-    f'<div class="tagline">Fast Chat + Full Research | Powered by Groq</div></div></div>',
+    f'<div class="tagline">Fast Chat + Full Research | Powered by Gemini and Groq</div></div></div>',
     unsafe_allow_html=True,
 )
 
