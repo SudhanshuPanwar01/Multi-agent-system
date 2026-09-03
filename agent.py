@@ -6,35 +6,36 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
 
-# Fast model: Gemini 2.0 Flash
+# ============================================================
+# GEMINI MODELS
+# ============================================================
+
 fast_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
-    api_key=api_key,
+    model="gemini-3.7-flash",
+    google_api_key=GOOGLE_API_KEY,
     temperature=0.5,
-    timeout=60,
-    max_retries=2,
+    timeout=90,
+    max_retries=5,
 )
 
-# Writer model: Gemini 2.0 Flash
 writer_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
-    api_key=api_key,
+    model="gemini-3.7-flash",
+    google_api_key=GOOGLE_API_KEY,
     temperature=0.4,
     timeout=90,
-    max_retries=2,
+    max_retries=5,
 )
 
-# Critic model: Gemini 2.0 Flash
 critic_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
-    api_key=api_key,
+    model="gemini-3.7-flash",
+    google_api_key=GOOGLE_API_KEY,
     temperature=0.2,
-    timeout=60,
-    max_retries=2,
+    timeout=90,
+    max_retries=5,
 )
-
+# ── Prompts ───────────────────────────────────────────────────
 fast_prompt = ChatPromptTemplate.from_messages([
     (
         "system",
@@ -72,7 +73,7 @@ Use this exact structure:
 
 ## Key Findings
 - Finding 1
-- Finding 2
+- Finding 2  
 - Finding 3
 - Finding 4
 - Finding 5
@@ -108,24 +109,25 @@ Use this exact format:
 
 **Score: X/10**
 
-### Strengths
+###  Strengths
 - Strength 1
 - Strength 2
 - Strength 3
 
-### Areas to Improve
+###  Areas to Improve
 - Issue 1
 - Issue 2
 - Issue 3
 
-### Verdict
+###  Verdict
 (One clear sentence summarizing overall quality)
 """,
     ),
 ])
 
+# ── Chains ────────────────────────────────────────────────────
 parser = StrOutputParser()
 
-fast_chain = fast_prompt | fast_llm | parser
+fast_chain   = fast_prompt   | fast_llm   | parser
 writer_chain = writer_prompt | writer_llm | parser
 critic_chain = critic_prompt | critic_llm | parser
