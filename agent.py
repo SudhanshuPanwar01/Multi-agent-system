@@ -6,38 +6,36 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
+# Pick up key from environment without passing an empty string
+api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-
-# Fast model: low latency, high throughput
+# Fast model: Gemini 1.5 Flash
 fast_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-pro",
-    google_api_key=GOOGLE_API_KEY,
+    model="gemini-1.5-flash",
+    api_key=api_key,
     temperature=0.5,
     timeout=60,
     max_retries=2,
 )
 
-# Writer model: nuanced reasoning and creative flow
+# Writer model: Gemini 1.5 Flash (reliable and avoids free-tier rate limits)
 writer_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-pro",
-    google_api_key=GOOGLE_API_KEY,
+    model="gemini-1.5-flash",
+    api_key=api_key,
     temperature=0.4,
-    timeout=60,
+    timeout=90,
     max_retries=2,
 )
 
-# Critic model: rigorous evaluation and analytical precision
+# Critic model: Gemini 1.5 Flash
 critic_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-pro",
-    google_api_key=GOOGLE_API_KEY,
+    model="gemini-1.5-flash",
+    api_key=api_key,
     temperature=0.2,
     timeout=60,
     max_retries=2,
 )
 
-# ── Prompts ───────────────────────────────────────────────────
 fast_prompt = ChatPromptTemplate.from_messages([
     (
         "system",
@@ -75,7 +73,7 @@ Use this exact structure:
 
 ## Key Findings
 - Finding 1
-- Finding 2  
+- Finding 2
 - Finding 3
 - Finding 4
 - Finding 5
@@ -111,25 +109,24 @@ Use this exact format:
 
 **Score: X/10**
 
-###  Strengths
+### Strengths
 - Strength 1
 - Strength 2
 - Strength 3
 
-###  Areas to Improve
+### Areas to Improve
 - Issue 1
 - Issue 2
 - Issue 3
 
-###  Verdict
+### Verdict
 (One clear sentence summarizing overall quality)
 """,
     ),
 ])
 
-# ── Chains ────────────────────────────────────────────────────
 parser = StrOutputParser()
 
-fast_chain   = fast_prompt   | fast_llm   | parser
+fast_chain = fast_prompt | fast_llm | parser
 writer_chain = writer_prompt | writer_llm | parser
 critic_chain = critic_prompt | critic_llm | parser
